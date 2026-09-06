@@ -1,0 +1,38 @@
+AQUORA 30TH AUG MERGED VERSION PART 2 — ASSET HANDOFF NOTES
+
+Website file
+- ../AQUORA 30th Aug Merged Version Part 2.html
+
+Approved-symbol replacement package
+- aquora-symbol-master.svg — transparent master vector; graphical symbol only
+- aquora-symbol-transparent.png — 1024px transparent PNG
+- aquora-favicon.svg — square SVG favicon with clear space
+- aquora-favicon-32.png — 32 × 32px favicon
+- aquora-apple-touch-icon.png — 180 × 180px touch icon
+- aquora-symbol-approval-preview.html — five-context visual approval sheet
+- aquora-symbol-approval-preview.png — rendered approval sheet
+
+Other live website assets
+- marine-hero.jpg — homepage hero image
+- aquora-social-share.jpg — current social-sharing image
+- Aquora_Leadership_Track_Record.pdf — downloadable leadership record
+
+Deployment requirement
+Keep this entire assets folder beside the HTML file. Preserve the folder name
+and filenames exactly. Upload assets before testing the webpage so none of the
+references return 404 errors.
+
+Logo rollout status
+APPROVED AND APPLIED. The Part 2 website uses the new master symbol consistently
+in the header, service-detail panel, Aquora Name section, 4A Approach and footer.
+The browser uses the dedicated SVG/PNG favicon assets and Apple touch icon.
+The temporary ?v=2 query string is intentional and prevents stale cached logos.
+
+Legacy asset
+- aquora-option-1-mark.svg is retained only because other archived HTML pages
+  may still reference it. It is not used by the updated Part 2 webpage and
+  should not be substituted for aquora-symbol-master.svg during deployment.
+
+Social-sharing artwork
+- aquora-social-share.jpg contains the approved vessel photograph and no logo,
+  so no symbol replacement was required within that image.
