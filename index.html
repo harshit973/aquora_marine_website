@@ -644,7 +644,7 @@
   <section class="enquiry" id="contact" aria-labelledby="contact-title">
     <div class="wrap enquiry-grid">
       <div class="enquiry-copy"><p class="eyebrow light">Start a conversation</p><h2 id="contact-title">What decision or requirement can we support?</h2><p>Begin with the operational, assurance or commercial requirement. Aquora will work with you to define an appropriate scope and practical next steps.</p><div class="contact-meta"><div><span>Email</span><a href="mailto:operations@aquoramarine.com">operations@aquoramarine.com</a></div><div><span>Telephone</span><a href="tel:+447369252575">+44 7369 252575</a></div><div><span>Office</span>London, United Kingdom</div><div><span>Coverage</span>International</div></div><p class="response">Aquora aims to acknowledge new enquiries within one business day.</p></div>
-      <form class="enquiry-form" id="contact-form" action="/api/enquiries" method="post" novalidate>
+      <form class="enquiry-form" id="contact-form" method="post" novalidate>
         <div class="trap" aria-hidden="true"><label>Leave this field empty<input name="company_website" tabindex="-1" autocomplete="off"></label></div>
         <div class="fields"><label for="name">Name<input id="name" name="name" autocomplete="name" required aria-describedby="name-error"><span class="field-error" id="name-error"></span></label><label for="organisation">Organisation<input id="organisation" name="organisation" autocomplete="organization" required aria-describedby="organisation-error"><span class="field-error" id="organisation-error"></span></label></div>
         <div class="fields"><label for="email">Work email<input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error"><span class="field-error" id="email-error"></span></label><label for="requirement">Requirement type<select id="requirement" name="requirement" required aria-describedby="requirement-error"><option value="">Select a requirement</option><option>Governance &amp; Systems</option><option>Audits &amp; Operations</option><option>Vetting &amp; Acceptance</option><option>Surveys &amp; Transactions</option><option>Incidents &amp; Risk</option><option>Performance &amp; Capability</option><option>Not sure / General enquiry</option></select><span class="field-error" id="requirement-error"></span></label></div>
@@ -713,9 +713,52 @@
     addEventListener('resize',()=>{if(innerWidth>1040&&mobile.classList.contains('open'))closeMenu(false)});
     document.querySelectorAll('.assurance-lens').forEach(lens=>lens.addEventListener('toggle',()=>{if(lens.open)document.querySelectorAll('.assurance-lens[open]').forEach(other=>{if(other!==lens)other.open=false})}));
     const navLinks=[...document.querySelectorAll('.desktop-nav a')],sections=['home','expertise','why','method','contact'].map(id=>document.getElementById(id)).filter(Boolean);if('IntersectionObserver'in window){const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){navLinks.forEach(a=>{const on=a.hash==='#'+entry.target.id;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')})}}),{rootMargin:'-32% 0px -60%',threshold:0});sections.forEach(s=>observer.observe(s))}
+      document.getElementById("contact-form").addEventListener("submit", function (event) {
+      event.preventDefault();
 
-    const form=document.getElementById('contact-form'),status=form.querySelector('.form-status'),required=[...form.querySelectorAll('[required]')];required.forEach(field=>field.addEventListener('input',()=>{field.removeAttribute('aria-invalid');const err=document.getElementById(field.id+'-error');if(err)err.textContent=''}));form.addEventListener('submit',async event=>{event.preventDefault();let first=null;required.forEach(field=>{const err=document.getElementById(field.id+'-error');if(!field.validity.valid){field.setAttribute('aria-invalid','true');if(err)err.textContent=field.validity.typeMismatch?'Enter a valid work email.':'This field is required.';first=first||field}});if(first){status.textContent='Please review the highlighted fields.';first.focus();return}if(form.elements.company_website.value)return;const button=form.querySelector('button[type="submit"]');button.disabled=true;status.textContent='Sending your enquiry…';try{const response=await fetch(form.action,{method:'POST',headers:{'Accept':'application/json'},body:new FormData(form)});if(!response.ok)throw new Error('Submission failed');form.reset();status.textContent='Thank you. Your enquiry has been sent to Aquora.'}catch(error){status.textContent='The secure enquiry service is not yet connected. Please email operations@aquoramarine.com.'}finally{button.disabled=false}});
-    document.getElementById('year').textContent=new Date().getFullYear();renderService('govern',false);renderStage('align');document.documentElement.classList.add('js-ready');
+      const form = event.target;
+
+      // Basic validation
+      if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+      const name = document.getElementById("name").value.trim();
+      const organisation = document.getElementById("organisation").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const requirement = document.getElementById("requirement").value.trim();
+      const vessel = document.getElementById("vessel").value.trim();
+      const location = document.getElementById("location").value.trim();
+      const timeframe = document.getElementById("timeframe").value.trim();
+      const message = document.getElementById("message").value.trim();
+
+      const subject = `Enquiry - ${requirement} - ${organisation}`;
+
+      const body = `
+Name: ${name}
+Organisation: ${organisation}
+Work Email: ${email}
+Requirement Type: ${requirement}
+Vessel Name / Type: ${vessel || "Not provided"}
+Location / Port: ${location || "Not provided"}
+Expected Timeframe: ${timeframe || "Not provided"}
+
+Message:
+${message}
+
+---
+Submitted via Aquora Marine enquiry form.
+  `.trim();
+
+      const mailtoUrl =
+      `mailto:operations@aquoramarine.com` +
+      `?subject=${encodeURIComponent(subject)}` +
+      `&body=${encodeURIComponent(body)}`;
+
+      window.location.href = mailtoUrl;
+    });
+      document.getElementById('year').textContent=new Date().getFullYear();renderService('govern',false);renderStage('align');document.documentElement.classList.add('js-ready');
   })();
 </script>
 </body>
